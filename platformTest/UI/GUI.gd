@@ -24,7 +24,7 @@ func SelectShortcut(shortcut):
 	CleanShortcuts()
 	var active_icon = load("res://UI/ui_skill_active.png")
 	get_node(shortcuts_path + shortcut).texture = active_icon
-	get_parent().get_node("Player").selected_skill = loaded_skills[shortcut]
+	get_node("../YSort/Player").selected_skill = loaded_skills[shortcut]
 		
 func CleanShortcuts():
 	var inactive_icon = load("res://UI/ui_skill_inactive.png")
