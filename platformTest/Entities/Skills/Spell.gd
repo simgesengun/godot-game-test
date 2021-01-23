@@ -29,9 +29,7 @@ func _physics_process(delta):
 	apply_impulse(Vector2(),Vector2(speed,0).rotated(rotation))
 	print(position.distance_to(original_position))
 	if position.distance_to(original_position) > max_distance:
-		print("exit")
 		queue_free()
 
 func _on_Spell_body_entered(body):
-	print(body)
 	queue_free()
