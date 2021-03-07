@@ -1,0 +1,59 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Entities/Skills/AreaOfEffect.gd" type="Script" id=1]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 40.0
+
+[sub_resource type="Gradient" id=2]
+colors = PoolColorArray( 0.11, 1.5, 0.09, 1, 0.17, 1.5, 0.09, 0.78 )
+
+[sub_resource type="GradientTexture" id=3]
+resource_local_to_scene = true
+gradient = SubResource( 2 )
+
+[sub_resource type="Curve" id=4]
+_data = [ Vector2( 0.251969, 0.986364 ), 0.0, 0.0, 0, 0, Vector2( 0.984252, 0.304545 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=5]
+curve = SubResource( 4 )
+
+[sub_resource type="ParticlesMaterial" id=6]
+resource_local_to_scene = true
+emission_shape = 1
+emission_sphere_radius = 20.0
+flag_disable_z = true
+gravity = Vector3( 0, 0, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+radial_accel = 99.26
+angle = 720.0
+angle_random = 1.0
+scale_curve = SubResource( 5 )
+color_ramp = SubResource( 3 )
+
+[node name="AreaOfEffect" type="Area2D"]
+modulate = Color( 1.5, 1.5, 1.5, 1 )
+collision_layer = 8
+collision_mask = 4
+script = ExtResource( 1 )
+damage = 150
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Particles2D" type="Particles2D" parent="."]
+rotation = 1.5708
+scale = Vector2( 2, 2 )
+emitting = false
+amount = 200
+lifetime = 0.5
+one_shot = true
+speed_scale = 1.5
+process_material = SubResource( 6 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+[connection signal="body_entered" from="." to="." method="_on_AreaOfEffect_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
