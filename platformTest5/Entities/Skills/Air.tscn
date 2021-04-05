@@ -76,7 +76,7 @@ shape = SubResource( 1 )
 
 [node name="AnimatedSprite" parent="Spell" index="1"]
 frames = SubResource( 5 )
-frame = 2
+frame = 0
 
 [node name="Particles2D" parent="Spell" index="2"]
 process_material = SubResource( 12 )

@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Entities/Skills/Effects/EffectExplosion.gd" type="Script" id=2]
+
+[sub_resource type="ParticlesMaterial" id=1]
+emission_shape = 1
+emission_sphere_radius = 30.0
+flag_disable_z = true
+gravity = Vector3( 0, -98, 0 )
+initial_velocity = 0.09
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = 100.0
+damping = 10.0
+scale = 3.0
+color = Color( 0.494118, 0.168627, 0.168627, 1 )
+
+[node name="Effect" type="Node2D"]
+script = ExtResource( 2 )
+damage = 100
+
+[node name="Particles2D" type="Particles2D" parent="."]
+position = Vector2( -0.318677, 0.788589 )
+amount = 20
+preprocess = 0.5
+process_material = SubResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
+autostart = true

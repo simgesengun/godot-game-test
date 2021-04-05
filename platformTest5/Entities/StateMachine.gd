@@ -4,7 +4,7 @@ class_name StateMachine
 var state = null setget set_state
 var previous_state = null
 var transition = null
-onready var parent: KinematicBody2D = get_parent()
+onready var parent = get_parent()
 
 func _physics_process(delta):
 	if state != null:

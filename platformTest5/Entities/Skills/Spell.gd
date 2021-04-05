@@ -9,7 +9,6 @@ var look_once = true
 onready var hitPosition = $AnimatedSprite/HitPosition
 
 func _ready():
-	print("Spell: " + get_parent().name)
 	contact_monitor = true
 	contacts_reported = 1
 

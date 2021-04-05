@@ -1,0 +1,185 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://Entities/Enemies/Slime/Slime.gd" type="Script" id=1]
+[ext_resource path="res://Entities/Enemies/EnemyHurtbox.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Entities/Hitbox.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Entities/Enemies/PlayerDetectionZone.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Entities/HurtBox.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Entities/Enemies/Slime/New_slime_finished-sheet.png" type="Texture" id=6]
+[ext_resource path="res://Entities/Enemies/EffectFSM.gd" type="Script" id=7]
+[ext_resource path="res://Entities/Stats.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Entities/Enemies/Slime/SlimeFSM.gd" type="Script" id=9]
+[ext_resource path="res://Entities/Enemies/EffectsAnimation.tscn" type="PackedScene" id=10]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 16, 14 )
+
+[sub_resource type="Animation" id=2]
+resource_name = "Attack"
+length = 0.4
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 3, 4, 5, 6 ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "Death"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 7, 8, 9, 10, 11, 12 ]
+}
+
+[sub_resource type="Animation" id=4]
+length = 0.1
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0 ]
+}
+
+[sub_resource type="Animation" id=5]
+length = 0.6
+loop = true
+step = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2 ]
+}
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 60, 10 )
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 15, 3 )
+
+[sub_resource type="CapsuleShape2D" id=8]
+radius = 9.0
+height = 9.0
+
+[sub_resource type="CircleShape2D" id=9]
+radius = 18.0
+
+[node name="Slime" type="KinematicBody2D"]
+scale = Vector2( -1, 1 )
+collision_layer = 4
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( -21, -28 )
+texture = ExtResource( 6 )
+centered = false
+hframes = 13
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2( 2, 3 )
+shape = SubResource( 1 )
+
+[node name="Stats" parent="." instance=ExtResource( 8 )]
+max_health = 200
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 9 )
+
+[node name="EffectFSM" type="Node" parent="."]
+script = ExtResource( 7 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Attack = SubResource( 2 )
+anims/Death = SubResource( 3 )
+anims/Frozen = SubResource( 4 )
+anims/Idle = SubResource( 5 )
+
+[node name="EffectsAnimation" parent="." instance=ExtResource( 10 )]
+
+[node name="PlayerDetectionZone" parent="." instance=ExtResource( 4 )]
+visible = false
+
+[node name="CollisionShape2D" parent="PlayerDetectionZone" index="0"]
+shape = SubResource( 6 )
+
+[node name="HurtBox" parent="." instance=ExtResource( 5 )]
+visible = false
+collision_layer = 128
+collision_mask = 0
+
+[node name="CollisionShape2D" parent="HurtBox" index="0"]
+position = Vector2( 0, -7 )
+shape = SubResource( 7 )
+
+[node name="Hitbox" parent="." instance=ExtResource( 3 )]
+position = Vector2( 0, -3 )
+collision_layer = 0
+collision_mask = 8
+cooldown = 0.4
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+visible = false
+position = Vector2( -8, -4.00001 )
+rotation = 1.5708
+shape = SubResource( 8 )
+
+[node name="EnemyHurtbox" parent="." instance=ExtResource( 2 )]
+visible = false
+effected_by = [ true, true, true, true, true ]
+
+[node name="CollisionShape2D" parent="EnemyHurtbox" index="0"]
+position = Vector2( 1, 3 )
+shape = SubResource( 9 )
+
+[node name="floor_checker" type="RayCast2D" parent="."]
+position = Vector2( -13, 10 )
+enabled = true
+cast_to = Vector2( 0, 10 )
+collision_mask = 64
+
+[node name="Position2D" type="Position2D" parent="."]
+[connection signal="immobilized" from="Stats" to="StateMachine" method="_on_Stats_immobilized"]
+[connection signal="no_health" from="Stats" to="StateMachine" method="_on_Stats_no_health"]
+[connection signal="animation_finished" from="AnimationPlayer" to="StateMachine" method="_on_AnimationPlayer_animation_finished"]
+[connection signal="area_entered" from="HurtBox" to="StateMachine" method="_on_HurtBox_area_entered"]
+[connection signal="area_entered" from="Hitbox" to="." method="_on_Hitbox_area_entered"]
+[connection signal="area_exited" from="Hitbox" to="." method="_on_Hitbox_area_exited"]
+[connection signal="area_entered" from="EnemyHurtbox" to="StateMachine" method="_on_EnemyHurtbox_area_entered"]
+
+[editable path="PlayerDetectionZone"]
+
+[editable path="HurtBox"]
+
+[editable path="Hitbox"]
+
+[editable path="EnemyHurtbox"]

@@ -1,0 +1,49 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://Entities/Enemies/EnemyHurtbox.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Entities/Enemies/PlayerDetectionZone.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Entities/Stats.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Entities/Enemies/Caterpillar/Caterpillar.gd" type="Script" id=4]
+[ext_resource path="res://Entities/Enemies/Ghost/Derrick Death 2 Sheet-export.png" type="Texture" id=5]
+[ext_resource path="res://Entities/Enemies/FixedEffectFSM.gd" type="Script" id=6]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 11.1597, 14.9157 )
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 81.2609
+
+[sub_resource type="CapsuleShape2D" id=3]
+radius = 11.75
+
+[node name="Caterpillar" type="StaticBody2D"]
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 0.226277, 0.226277 )
+texture = ExtResource( 5 )
+hframes = 7
+
+[node name="Stats" parent="." instance=ExtResource( 3 )]
+
+[node name="EffectFSM" type="Node" parent="."]
+script = ExtResource( 6 )
+
+[node name="PlayerDetectionZone" parent="." instance=ExtResource( 2 )]
+
+[node name="CollisionShape2D" parent="PlayerDetectionZone" index="0"]
+shape = SubResource( 2 )
+
+[node name="EnemyHurtbox" parent="." instance=ExtResource( 1 )]
+effected_by = [ true, true, true, true, true ]
+
+[node name="CollisionShape2D" parent="EnemyHurtbox" index="0"]
+shape = SubResource( 3 )
+
+[editable path="PlayerDetectionZone"]
+
+[editable path="EnemyHurtbox"]

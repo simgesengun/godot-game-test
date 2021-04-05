@@ -1,5 +1,7 @@
 extends "res://Entities/StateMachine.gd"
 
+onready var animation_player:AnimationPlayer = parent.get_node("AnimationPlayer")
+
 enum states{
 	IDLE,
 	RUN,
@@ -13,7 +15,7 @@ func _ready():
 
 func _state_logic(delta):
 	if [states.IDLE, states.RUN,states.JUMP,states.FALL].has(state):
-		parent._handle_movement()
+		parent._handle_movement(delta)
 	elif [states.CRAWL, states.CROUCH].has(state):
 		parent._handle_movement(parent.CRAWL_SPEED)
 	parent._apply_gravity(delta)
@@ -37,7 +39,7 @@ func _get_transition(delta):
 					return states.JUMP
 				else:
 					return states.FALL
-			elif parent.motion.x ==0:
+			elif parent.motion.x == 0:
 				return states.IDLE
 			elif Input.is_action_pressed("ui_down"):
 				return states.CRAWL
@@ -70,7 +72,7 @@ func _enter_state(new_state, old_state):
 	match new_state:
 		states.IDLE:
 			parent.label.text = "IDLE"
-			parent.animationPlayer.play("Idle")
+			#animation_player.play("Idle")
 		states.RUN:
 			parent.label.text = "RUN"
 		states.JUMP:

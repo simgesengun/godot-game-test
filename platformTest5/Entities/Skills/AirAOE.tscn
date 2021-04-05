@@ -1,18 +1,18 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Entities/Skills/AreaOfEffect.gd" type="Script" id=1]
+[ext_resource path="res://Entities/Skills/AreaOfEffect.tscn" type="PackedScene" id=1]
 
-[sub_resource type="CapsuleShape2D" id=1]
-radius = 20.0
-height = 12.0
+[sub_resource type="Gradient" id=1]
+resource_local_to_scene = true
+offsets = PoolRealArray( 0.012987, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0.49 )
 
-[sub_resource type="Gradient" id=2]
-colors = PoolColorArray( 1.5, 1.5, 1.5, 1, 1.5, 1.5, 1.5, 0.49 )
+[sub_resource type="GradientTexture" id=2]
+resource_local_to_scene = true
+gradient = SubResource( 1 )
 
-[sub_resource type="GradientTexture" id=3]
-gradient = SubResource( 2 )
-
-[sub_resource type="ParticlesMaterial" id=4]
+[sub_resource type="ParticlesMaterial" id=3]
+resource_local_to_scene = true
 emission_shape = 1
 emission_sphere_radius = 30.0
 flag_disable_z = true
@@ -23,33 +23,14 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 linear_accel = 34.07
 scale = 2.0
-color_ramp = SubResource( 3 )
+color_ramp = SubResource( 2 )
 
 [node name="AirAOE" type="Node2D"]
 
-[node name="AreaOfEffect" type="Area2D" parent="."]
-modulate = Color( 1.5, 1.5, 1.5, 1 )
-collision_layer = 8
-collision_mask = 4
-script = ExtResource( 1 )
-damage = 150
-skill_name = 4
+[node name="AreaOfEffect" parent="." instance=ExtResource( 1 )]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaOfEffect"]
-position = Vector2( 26, 0 )
-rotation = 1.5708
-shape = SubResource( 1 )
+[node name="Particles2D" parent="AreaOfEffect" index="2"]
+amount = 50
+process_material = SubResource( 3 )
 
-[node name="Timer" type="Timer" parent="AreaOfEffect"]
-wait_time = 0.5
-one_shot = true
-
-[node name="Particles2D" type="Particles2D" parent="AreaOfEffect"]
-emitting = false
-amount = 20
-lifetime = 0.5
-one_shot = true
-preprocess = 0.5
-process_material = SubResource( 4 )
-[connection signal="body_entered" from="AreaOfEffect" to="AreaOfEffect" method="_on_AreaOfEffect_body_entered"]
-[connection signal="timeout" from="AreaOfEffect/Timer" to="AreaOfEffect" method="_on_Timer_timeout"]
+[editable path="AreaOfEffect"]

@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Entities/Player/witch_wand.png" type="Texture" id=1]
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 3, 4 )
+
+[node name="Arm" type="Area2D"]
+input_pickable = false
+linear_damp = 0.0
+collision_layer = 2
+collision_mask = 5
+
+[node name="SpriteWand" type="Sprite" parent="."]
+use_parent_material = true
+position = Vector2( 21, 26 )
+z_index = -1
+texture = ExtResource( 1 )
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 43, 34 )
+shape = SubResource( 3 )
+
+[node name="WandPoint" type="Position2D" parent="."]
+position = Vector2( 46, 35 )

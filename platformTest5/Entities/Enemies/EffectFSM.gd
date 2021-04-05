@@ -1,5 +1,6 @@
 extends "res://Entities/StateMachine.gd"
 
+onready var collision_shape = parent.get_node("CollisionShape2D")
 var state_request
 func _ready():
 	call_deferred("set_state",Global.SE.NONE)
@@ -26,42 +27,66 @@ func _get_transition(delta):
 		Global.SE.FIRE:
 		#fire + earth -> magma
 		#fire + air -> burst
+		#fire + water -> none
 		#fire -> none
 			if state_request == Global.SE.EARTH:
 				return Global.SE.MAGMA
 			elif state_request == Global.SE.AIR:
-				return Global.SE.BURST
+				return Global.SE.BURST  
+			elif state_request == Global.SE.WATER:
+				return Global.SE.NONE                                                                                                      
 		Global.SE.WATER:
 		#water + air  -> ice
 		#water + earth -> mud
+		#water + fire -> none
 		#water -> none
 			if state_request == Global.SE.AIR:
 				return Global.SE.ICE
 			elif state_request == Global.SE.EARTH:
 				return Global.SE.MUD
+			elif state_request == Global.SE.FIRE:
+				return Global.SE.NONE
 		Global.SE.EARTH:
 		#earth + fire -> magma
 		#earth + water -> mud
+		#earth + air -> air
 		#earth -> none
 			if state_request == Global.SE.FIRE:
 				return Global.SE.MAGMA
 			elif state_request == Global.SE.WATER:
 				return Global.SE.MUD
+			elif state_request == Global.SE.AIR:
+				return Global.SE.AIR
+		Global.SE.MAGMA:
+		#magma + water -> none
+		#magma + air -> air
+			if state_request == Global.SE.WATER:
+				return Global.SE.NONE
+			elif state_request == Global.SE.AIR:
+				return Global.SE.AIR
+		Global.SE.MUD:
+		#mud + fire -> none
+		#mud + air -> air
+			if state_request == Global.SE.FIRE:
+				return Global.SE.NONE
+			elif state_request == Global.SE.AIR:
+				return Global.SE.AIR
+		Global.SE.ICE:
+		#ice + fire -> none
+		#ice + earth -> earth
+			if state_request == Global.SE.FIRE:
+				return Global.SE.NONE
+			elif state_request == Global.SE.EARTH:
+				return Global.SE.EARTH
 		Global.SE.AIR:
 			pass
 		Global.SE.BURST:
 			pass
-		Global.SE.MAGMA:
-			pass
-		Global.SE.ICE:
-			pass
-		Global.SE.MUD:
-			pass
 
 func _enter_state(new_state, old_state):
+	state_request = null  
 	yield(get_tree().create_timer(0.1),"timeout")
-	state_request = null
-	parent.get_node("Label").text = Global.SE.keys()[new_state]
+	#parent.get_node("Label").text = Global.SE.keys()[new_state]
 	match new_state:
 		Global.SE.FIRE:
 			_create_effect("Fire")
@@ -83,13 +108,18 @@ func _enter_state(new_state, old_state):
 func _exit_state(old_state, new_state):
 	if old_state != Global.SE.NONE:
 		parent.get_node("Effect").queue_free()
-
+  
 
 func _create_effect(effect_name):
-	var effect = load("res://Entities/Skills/" + effect_name + "Effect.tscn")
-	Global.instance_node(effect,parent.global_position-Vector2(0,7),parent)
+	var effect = load("res://Entities/Skills/Effects/" + effect_name + "Effect.tscn")
+	var offset = Vector2(0,collision_shape.shape.extents.y)
+	if [Global.SE.MUD, Global.SE.WATER].has(state):
+		Global.instance_node(effect,parent.global_position - offset,parent)
+	else:
+		Global.instance_node(effect,parent.global_position + offset,parent)
+		
 
 func _effect_finished():
-	set_state(Global.SE.NONE)
+	set_state(Global.SE.NONE)                                                        
 
 

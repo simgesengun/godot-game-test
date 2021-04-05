@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Entities/Skills/Effects/ETSlow.gd" type="Script" id=2]
+
+[sub_resource type="ParticlesMaterial" id=1]
+emission_shape = 1
+emission_sphere_radius = 10.0
+flag_disable_z = true
+gravity = Vector3( 0, 98, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping = 54.07
+scale = 2.0
+color = Color( 0.14902, 0.862745, 0.878431, 1 )
+
+[node name="Effect" type="Node2D"]
+script = ExtResource( 2 )
+damage = 5
+slow = 20
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+autostart = true
+
+[node name="Particles2D" type="Particles2D" parent="."]
+position = Vector2( -0.148651, 8.7704 )
+amount = 10
+preprocess = 0.5
+process_material = SubResource( 1 )
