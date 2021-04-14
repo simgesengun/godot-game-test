@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Entities/Enemies/ShootingFlower/bullet.png" type="Texture" id=1]
+[ext_resource path="res://Entities/Enemies/Wizard/Bullet.gd" type="Script" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 21.634
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 21.0
+
+[node name="Bullet" type="RigidBody2D"]
+collision_layer = 4
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="."]
+modulate = Color( 0.0666667, 0.180392, 0.933333, 1 )
+self_modulate = Color( 0.0666667, 0.180392, 0.933333, 1 )
+position = Vector2( -25, -25 )
+scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 1 )
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="visibility_notifier" type="VisibilityNotifier2D" parent="."]
+position = Vector2( 0.140311, 0.140307 )
+scale = Vector2( 2.23471, 2.23471 )
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource( 2 )
+[connection signal="screen_exited" from="visibility_notifier" to="." method="_on_visibility_notifier_screen_exited"]
+[connection signal="area_entered" from="Hitbox" to="." method="_on_Hitbox_area_entered"]
